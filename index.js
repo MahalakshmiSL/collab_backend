@@ -9,7 +9,11 @@ require('dotenv').config();
 const Document = require('./models/Document');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+}));
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -54,6 +58,8 @@ async function findOrCreateDocument(id) {
   return await Document.create({ _id: id, data: defaultValue });
 }
 
-server.listen(3001, () => {
-  console.log('Server running on port 3001');
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
+
